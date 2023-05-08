@@ -7,9 +7,11 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
@@ -27,9 +29,29 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.app_bar_background)));
         }
 
-        LinearLayout chipContainer = findViewById(R.id.chipContainer);
+    }
+}
+
+       /* LinearLayout chipContainer = findViewById(R.id.chipContainer);
         List<String> chipLabels = Arrays.asList("Triumph", "Kawasaki", "BMW", "Honda", "Yamaha");
         createChips(chipContainer, chipLabels);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.menu_item_1:
+                        // Ação para o item 1
+                        return true;
+                    case R.id.menu_item_2:
+                        // Ação para o item 2
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
     }
 
     private void createChips(LinearLayout chipContainer, List<String> chipTexts) {
@@ -70,4 +92,4 @@ public class MainActivity extends AppCompatActivity {
             chip.setTag(false);
         }
     }
-}
+}*/
