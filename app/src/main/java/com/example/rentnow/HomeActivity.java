@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,10 +28,14 @@ public class HomeActivity extends AppCompatActivity implements MotorcycleAdapter
     MotorcycleAdapter motorcycleAdapter;
     private static List<Motorcycle> motorcycles = new ArrayList<>();
 
+    EditText searchbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        searchbar = findViewById(R.id.searchbar);
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
