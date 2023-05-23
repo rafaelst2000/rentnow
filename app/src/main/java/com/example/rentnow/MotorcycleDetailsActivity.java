@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.palette.graphics.Palette;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -16,8 +17,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MotorcycleDetailsActivity extends AppCompatActivity {
     ImageButton goBackBtn;
@@ -27,6 +33,8 @@ public class MotorcycleDetailsActivity extends AppCompatActivity {
     MaterialButton rentMotorcycleBtn;
     LinearLayout cardContainer;
     LayoutInflater inflater;
+
+    String token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +66,7 @@ public class MotorcycleDetailsActivity extends AppCompatActivity {
         rentMotorcycleBtn.setText("Alugar por R$" + motorcycle.getPrice() + "/dia");
 
         address.setEnabled(false);
+
         goBackBtn.setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.SRC_IN);
         goBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +77,7 @@ public class MotorcycleDetailsActivity extends AppCompatActivity {
         });
 
         createCards(motorcycle);
+        getPreferences();
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), imageResId);
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
@@ -78,6 +88,13 @@ public class MotorcycleDetailsActivity extends AppCompatActivity {
                     ellipsis.setColorFilter(vibrantColor, PorterDuff.Mode.SRC_IN);
                     rentMotorcycleBtn.setBackgroundColor(vibrantColor);
                 }
+            }
+        });
+
+        rentMotorcycleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rentMotorcycle(motorcycle);
             }
         });
     }
@@ -110,6 +127,36 @@ public class MotorcycleDetailsActivity extends AppCompatActivity {
         TextView centerText4 = cardView4.findViewById(R.id.center_text);
         centerText4.setText(motorcycle.getBrand());
         cardContainer.addView(cardView4);
+    }
 
+    private void getPreferences() {
+        String PREFS = Constants.PREFS;
+        String KEY_TOKEN = Constants.KEY_TOKEN;
+        SharedPreferences preferences = getSharedPreferences(PREFS, MODE_PRIVATE);
+
+        token = preferences.getString(KEY_TOKEN, "");
+    }
+
+    private void rentMotorcycle(Motorcycle motorcycle) {
+        RetrofitApi api = RetrofitClient.getRetrofitInstance().create(RetrofitApi.class);
+        Call<Void> call = api.rentMotorcycle(motorcycle.getBrand(), motorcycle.getId(), token);
+        rentMotorcycleBtn.setEnabled(false);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(MotorcycleDetailsActivity.this, motorcycle.getName()+" reservada com sucesso!", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(MotorcycleDetailsActivity.this, MyRentsActivity.class);
+                    startActivity(i);
+                }
+                rentMotorcycleBtn.setEnabled(true);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(MotorcycleDetailsActivity.this, "Houve um erro ao reservar a motocicleta, tente novamente mais tarde", Toast.LENGTH_LONG).show();
+                rentMotorcycleBtn.setEnabled(true);
+            }
+        });
     }
 }

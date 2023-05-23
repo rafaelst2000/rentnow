@@ -3,6 +3,7 @@ package com.example.rentnow;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -24,7 +25,7 @@ import org.w3c.dom.Text;
 
 import java.util.Arrays;
 import java.util.List;
-
+import com.example.rentnow.Constants;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -78,11 +79,14 @@ public class MainActivity extends AppCompatActivity {
         loginBtn.setEnabled(false);
         User user = new User("", email.getText().toString(), password.getText().toString());
         RetrofitApi api = RetrofitClient.getRetrofitInstance().create(RetrofitApi.class);
-        Call<User> call = api.login(user);
-        call.enqueue(new Callback<User>() {
+        Call<LoginResponse> call = api.login(user);
+        call.enqueue(new Callback<LoginResponse>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
+                    String name = response.body().getName();
+                    String token = response.body().getToken();
+                    saveSharedPreferences(name, token);
                     Toast.makeText(MainActivity.this, "Usuário autenticado com sucesso!", Toast.LENGTH_SHORT).show();
                     openHomeActivity();
                 } else {
@@ -92,10 +96,23 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
                 Toast.makeText(MainActivity.this, "Houve um erro ao autenticar o usuário, tente novamente mais tarde", Toast.LENGTH_LONG).show();
                 loginBtn.setEnabled(true);
             }
         });
+    }
+
+    private void saveSharedPreferences(String name, String token) {
+        String PREFS = Constants.PREFS;
+        String KEY_NAME = Constants.KEY_NAME;
+        String KEY_TOKEN = Constants.KEY_TOKEN;
+
+        SharedPreferences preferences = getSharedPreferences(PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putString(KEY_NAME, name);
+        editor.putString(KEY_TOKEN, token);
+        editor.commit();
     }
 }
