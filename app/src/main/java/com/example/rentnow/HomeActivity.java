@@ -4,10 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -49,6 +53,23 @@ public class HomeActivity extends AppCompatActivity implements MotorcycleAdapter
         List<String> chipLabels = Arrays.asList("Triumph", "Kawasaki", "BMW", "Honda", "Yamaha", "Suzuki");
         createChips(chipContainer, chipLabels);
         loadMotorcycles();
+
+        searchbar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filterMotorcycles(s.toString());
+            }
+        });
     }
 
     private TextView selectedChip = null;
@@ -115,7 +136,10 @@ public class HomeActivity extends AppCompatActivity implements MotorcycleAdapter
 
     @Override
     public void onMotorcycleClick(int position) {
-
+        Motorcycle selectedMotorcycle = motorcycles.get(position);
+        Intent i = new Intent(HomeActivity.this, MotorcycleDetailsActivity.class);
+        i.putExtra("selected_motorcycle", selectedMotorcycle);
+        startActivity(i);
     }
 
     private void loadMotorcycles() {
@@ -139,20 +163,13 @@ public class HomeActivity extends AppCompatActivity implements MotorcycleAdapter
         });
     }
 
-           /* BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.menu_item_1:
-                        // Ação para o item 1
-                        return true;
-                    case R.id.menu_item_2:
-                        // Ação para o item 2
-                        return true;
-                    default:
-                        return false;
-                }
+    private void filterMotorcycles(String text) {
+        List<Motorcycle> filteredList = new ArrayList<>();
+        for (Motorcycle item : motorcycles) {
+            if (item.getName().toLowerCase().contains(text.toLowerCase())) {
+                filteredList.add(item);
             }
-        }); */
+        }
+        motorcycleAdapter.updateMotorcycles(filteredList);
+    }
 }

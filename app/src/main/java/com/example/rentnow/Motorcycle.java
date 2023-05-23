@@ -9,6 +9,8 @@ public class Motorcycle implements Serializable {
     private String id;
     @SerializedName("name")
     private String name;
+    @SerializedName("description")
+    private String description;
     @SerializedName("brand")
     private String brand;
     @SerializedName("displacement")
@@ -29,9 +31,10 @@ public class Motorcycle implements Serializable {
     private String location;
 
 
-    public Motorcycle(String id, String name, String brand, String displacement, Float rate, Float price, String image, String cv, String weight, Float fuel, String location ) {
+    public Motorcycle(String id, String name, String description, String brand, String displacement, Float rate, Float price, String image, String cv, String weight, Float fuel, String location ) {
         this.id = id;
         this.name = name;
+        this.description = description;
         this.brand = brand;
         this.displacement = displacement;
         this.rate = rate;
@@ -85,5 +88,9 @@ public class Motorcycle implements Serializable {
 
     public String getLocation() {
         return location;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
