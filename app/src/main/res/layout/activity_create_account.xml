@@ -63,7 +63,7 @@
         android:background="@drawable/custom_edittext"
         android:ems="10"
         android:fontFamily="@font/nunitomedium"
-        android:inputType="text"
+        android:inputType="textPassword"
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

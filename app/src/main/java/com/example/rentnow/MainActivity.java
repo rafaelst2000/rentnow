@@ -77,12 +77,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void login() {
         loginBtn.setEnabled(false);
+        loginBtn.setText("Entrando...");
         User user = new User("", email.getText().toString(), password.getText().toString());
         RetrofitApi api = RetrofitClient.getRetrofitInstance().create(RetrofitApi.class);
         Call<LoginResponse> call = api.login(user);
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                loginBtn.setText("Login");
                 if (response.isSuccessful()) {
                     String name = response.body().getName();
                     String token = response.body().getToken();
@@ -97,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
+                loginBtn.setText("Login");
                 Toast.makeText(MainActivity.this, "Houve um erro ao autenticar o usuário, tente novamente mais tarde", Toast.LENGTH_LONG).show();
                 loginBtn.setEnabled(true);
             }

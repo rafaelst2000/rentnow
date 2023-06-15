@@ -37,6 +37,7 @@ public class HomeActivity extends AppCompatActivity implements MotorcycleAdapter
     RecyclerView recyclerView;
     MotorcycleAdapter motorcycleAdapter;
     private static List<Motorcycle> motorcycles = new ArrayList<>();
+    private static List<Motorcycle> filteredList = new ArrayList<>();
 
     EditText searchbar;
     TextView userName, emptyState;
@@ -174,7 +175,7 @@ public class HomeActivity extends AppCompatActivity implements MotorcycleAdapter
 
     @Override
     public void onMotorcycleClick(int position) {
-        Motorcycle selectedMotorcycle = motorcycles.get(position);
+        Motorcycle selectedMotorcycle = filteredList.get(position);
         Intent i = new Intent(HomeActivity.this, MotorcycleDetailsActivity.class);
         i.putExtra("selected_motorcycle", selectedMotorcycle);
         startActivity(i);
@@ -215,7 +216,7 @@ public class HomeActivity extends AppCompatActivity implements MotorcycleAdapter
     }
 
     private void filterMotorcycles(String text) {
-        List<Motorcycle> filteredList = new ArrayList<>();
+        filteredList = new ArrayList<>();
         for (Motorcycle item : motorcycles) {
             if (item.getName().toLowerCase().contains(text.toLowerCase())) {
                 filteredList.add(item);

@@ -57,12 +57,14 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     private void createAccount() {
         registryBtn.setEnabled(false);
+        registryBtn.setText("Criando sua conta...");
         User user = new User(name.getText().toString(), email.getText().toString(), password.getText().toString());
         RetrofitApi api = RetrofitClient.getRetrofitInstance().create(RetrofitApi.class);
         Call<User> call = api.createAccount(user);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
+                registryBtn.setText("Cadastrar");
                 if (response.isSuccessful()) {
                     Toast.makeText(CreateAccountActivity.this, "Usuário criado com sucesso!", Toast.LENGTH_SHORT).show();
                     openCreateLoginActivity();
@@ -74,6 +76,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                registryBtn.setText("Cadastrar");
                 Toast.makeText(CreateAccountActivity.this, "Houve um erro ao criar usuário, tente novamente mais tarde", Toast.LENGTH_LONG).show();
                 registryBtn.setEnabled(true);
             }
