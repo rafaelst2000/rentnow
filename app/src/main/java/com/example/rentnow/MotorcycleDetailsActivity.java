@@ -139,7 +139,7 @@ public class MotorcycleDetailsActivity extends AppCompatActivity {
 
     private void rentMotorcycle(Motorcycle motorcycle) {
         RetrofitApi api = RetrofitClient.getRetrofitInstance().create(RetrofitApi.class);
-        Call<Void> call = api.rentMotorcycle(motorcycle.getBrand(), motorcycle.getId(), token);
+        Call<Void> call = api.rentMotorcycle(motorcycle.getId(), token);
         rentMotorcycleBtn.setEnabled(false);
         call.enqueue(new Callback<Void>() {
             @Override

@@ -109,7 +109,7 @@ public class MyRentsActivity extends AppCompatActivity implements MotorcycleAdap
     private void loadMyMotorcycles() {
         searchbar.setText("");
         RetrofitApi api = RetrofitClient.getRetrofitInstance().create(RetrofitApi.class);
-        Call<List<Motorcycle>> call = api.getMyMotorcycles(token);
+        Call<List<Motorcycle>> call = api.getMyMotorcycles("true", token);
         call.enqueue(new Callback<List<Motorcycle>>() {
             @Override
             public void onResponse(Call<List<Motorcycle>> call, Response<List<Motorcycle>> response) {

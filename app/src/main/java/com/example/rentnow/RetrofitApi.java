@@ -8,15 +8,16 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 
 public interface RetrofitApi {
 
-    @GET("/{brand}/motorcycles")
-    Call <List<Motorcycle>> getMotorcyclesByBrand(@Path("brand") String brand);
+    @GET("/motorcycles")
+    Call <List<Motorcycle>> getMotorcyclesByBrand(@Query("brand") String brand, @Header("Authorization") String token);
 
     @GET("/motorcycles")
-    Call <List<Motorcycle>> getMyMotorcycles(@Header("Authorization") String token);
+    Call <List<Motorcycle>> getMyMotorcycles(@Query("myMotorcycles") String myMotorcycles, @Header("Authorization") String token);
 
     @POST("users")
     Call<User> createAccount(@Body User user);
@@ -24,6 +25,6 @@ public interface RetrofitApi {
     @POST("sessions")
     Call<LoginResponse> login(@Body User user);
 
-    @PUT("/{brand}/motorcycles/{id}")
-    Call<Void> rentMotorcycle(@Path("brand") String brand, @Path("id") String id, @Header("Authorization") String token);
+    @PUT("/motorcycles/{id}")
+    Call<Void> rentMotorcycle(@Path("id") String id, @Header("Authorization") String token);
 }

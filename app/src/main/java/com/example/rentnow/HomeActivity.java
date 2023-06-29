@@ -37,7 +37,6 @@ public class HomeActivity extends AppCompatActivity implements MotorcycleAdapter
     RecyclerView recyclerView;
     MotorcycleAdapter motorcycleAdapter;
     private static List<Motorcycle> motorcycles = new ArrayList<>();
-    private static List<Motorcycle> filteredList = new ArrayList<>();
 
     EditText searchbar;
     TextView userName, emptyState;
@@ -175,7 +174,7 @@ public class HomeActivity extends AppCompatActivity implements MotorcycleAdapter
 
     @Override
     public void onMotorcycleClick(int position) {
-        Motorcycle selectedMotorcycle = filteredList.get(position);
+        Motorcycle selectedMotorcycle = motorcycles.get(position);
         Intent i = new Intent(HomeActivity.this, MotorcycleDetailsActivity.class);
         i.putExtra("selected_motorcycle", selectedMotorcycle);
         startActivity(i);
@@ -189,7 +188,7 @@ public class HomeActivity extends AppCompatActivity implements MotorcycleAdapter
     private void loadMotorcycles() {
         searchbar.setText("");
         RetrofitApi api = RetrofitClient.getRetrofitInstance().create(RetrofitApi.class);
-        Call<List<Motorcycle>> call = api.getMotorcyclesByBrand(selectedChip.getText().toString());
+        Call<List<Motorcycle>> call = api.getMotorcyclesByBrand(selectedChip.getText().toString(), token);
         call.enqueue(new Callback<List<Motorcycle>>() {
             @Override
             public void onResponse(Call<List<Motorcycle>> call, Response<List<Motorcycle>> response) {
@@ -204,19 +203,19 @@ public class HomeActivity extends AppCompatActivity implements MotorcycleAdapter
                         emptyState.setVisibility(View.GONE);
                     }
                 } else {
-                    Toast.makeText(HomeActivity.this, "Erro ao buscar motocicletas", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, "Erro ao buscar motocicletas" + selectedChip.getText(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Motorcycle>> call, Throwable t) {
-                Toast.makeText(HomeActivity.this, "Erro ao buscar motocicletas", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeActivity.this, "Erro ao buscar motocicletas 2", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void filterMotorcycles(String text) {
-        filteredList = new ArrayList<>();
+        List<Motorcycle> filteredList = new ArrayList<>();
         for (Motorcycle item : motorcycles) {
             if (item.getName().toLowerCase().contains(text.toLowerCase())) {
                 filteredList.add(item);
